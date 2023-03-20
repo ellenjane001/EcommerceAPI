@@ -13,12 +13,14 @@ namespace EcommerceAPI.Data.Repositories
         private readonly AppDBContext _dbContext;
         private readonly IDbConnection _connection;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly ILogger _logger;
 
-        public CartItemRepository(AppDBContext dbContext, AppDapperContext dapperContext, IHttpContextAccessor contextAccessor)
+        public CartItemRepository(AppDBContext dbContext, AppDapperContext dapperContext, IHttpContextAccessor contextAccessor, ILogger<CartItemRepository> logger)
         {
             _dbContext = dbContext;
             _connection = dapperContext.CreateConnection();
             _contextAccessor = contextAccessor;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<CartItem>> GetCartItems()
