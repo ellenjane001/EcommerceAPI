@@ -15,6 +15,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
 builder.Services.AddScoped<ICheckoutRepository, CheckoutRepository>();
+builder.Services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddSingleton<AppDapperContext>();
 builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection")));
 builder.Services.AddControllers();

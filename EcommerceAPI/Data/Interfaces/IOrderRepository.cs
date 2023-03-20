@@ -7,7 +7,7 @@ namespace EcommerceAPI.Data.Interfaces
     {
         Task<IEnumerable<Order>> GetOrders();
         Task<Order> GetOrder(Guid OrderId);
-        bool Put(Guid OrderId, UpdateOrderDTO order);
-        void Delete(Guid OrderId);
+        Task Put(Guid OrderId, UpdateOrderDTO order);
+        Task Delete(Guid OrderId);
     }
 }

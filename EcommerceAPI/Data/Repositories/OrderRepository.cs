@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using EcommerceAPI.Data.Contexts;
-using EcommerceAPI.Data.Handlers;
 using EcommerceAPI.Data.Interfaces;
+using EcommerceAPI.Data.Miscellaneous;
 using EcommerceAPI.Domain.Entities;
 using EcommerceAPI.DTO.Order;
 using Microsoft.EntityFrameworkCore;
@@ -43,26 +43,21 @@ namespace EcommerceAPI.Data.Repositories
             order.CartItems = cartItems;
             return order;
         }
-        public bool Put(Guid OrderId, UpdateOrderDTO order)
+        public async Task Put(Guid OrderId, UpdateOrderDTO order)
         {
-            var SelectOrder = _dbContext.Orders.FirstOrDefault(o => o.OrderId.Equals(OrderId));
-            if (SelectOrder == null)
-                return false;
-            else
-            {
-                SelectOrder.Status = order.Status;
-                _dbContext.Orders.Update(SelectOrder);
-                _dbContext.SaveChanges();
-                return true;
-            }
+            var SelectOrder = _dbContext.Orders.FirstOrDefault(o => o.OrderId.Equals(OrderId)) ?? throw new Exception("Not Found");
+            SelectOrder!.Status = order.Status;
+            _dbContext.Orders.Update(SelectOrder);
+            await _dbContext.SaveChangesAsync();
+
         }
-        public void Delete(Guid OrderId)
+        public async Task Delete(Guid OrderId)
         {
-            var order = _dbContext.Orders.FirstOrDefault(o => o.OrderId == OrderId);
+            var order = _dbContext.Orders.FirstOrDefault(o => o.OrderId == OrderId) ?? throw new Exception("Not Found");
             if (order != null)
             {
                 _dbContext.Orders.Remove(order);
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
             }
         }
     }

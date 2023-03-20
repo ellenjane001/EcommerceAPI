@@ -1,5 +1,8 @@
-﻿using EcommerceAPI.Data.Interfaces;
+﻿using EcommerceAPI.Data.Commands;
+using EcommerceAPI.Data.Interfaces;
+using EcommerceAPI.Data.Queries;
 using EcommerceAPI.DTO.CartItem;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceAPI.Controllers
@@ -9,9 +12,11 @@ namespace EcommerceAPI.Controllers
     public class CartItemController : ControllerBase
     {
         private readonly ICartItemRepository _cartItemRepository;
-        public CartItemController(ICartItemRepository cartItemRepository)
+        private readonly IMediator _mediator;
+        public CartItemController(ICartItemRepository cartItemRepository, IMediator mediator)
         {
             _cartItemRepository = cartItemRepository;
+            _mediator = mediator;
         }
 
         [HttpGet]
@@ -21,7 +26,8 @@ namespace EcommerceAPI.Controllers
         {
             try
             {
-                var results = await _cartItemRepository.GetCartItems();
+                //var results = await _cartItemRepository.GetCartItems();
+                var results = await _mediator.Send(new GetCartItemsQuery());
                 return Ok(results);
             }
             catch (Exception ex)
@@ -30,14 +36,15 @@ namespace EcommerceAPI.Controllers
             }
         }
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] AddCartItemDTO addCartItem)
         {
             try
             {
-                var res = await _cartItemRepository.Post(addCartItem);
-                return Ok(res);
+                //var res = await _cartItemRepository.Post(addCartItem);
+                await _mediator.Send(new AddCartItemCommand(addCartItem));
+                return NoContent();
             }
             catch (Exception ex)
             {
