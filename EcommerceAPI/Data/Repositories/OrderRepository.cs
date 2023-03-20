@@ -21,12 +21,11 @@ namespace EcommerceAPI.Data.Repositories
         public async Task<IEnumerable<Order>> GetOrders()
         {
             var CartItemHandlers = new CartItemHandlers(_dbContext);
-            var query = "SELECT * FROM orders";
+            var query = "SELECT * FROM orders WHERE status = 0";
             _connection.Open();
             var orders = await _connection.QueryAsync<Order>(query);
             var orderIds = orders.Select(order => order.OrderId).ToArray();
             var cartItems = CartItemHandlers.GetCartItemsByOrderId(orderIds);
-
             foreach (var order in orders)
             {
                 order.CartItems = cartItems.Where(cartItem => cartItem.OrderId == order.OrderId).ToList();

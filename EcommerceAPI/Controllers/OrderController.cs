@@ -14,11 +14,20 @@ namespace EcommerceAPI.Controllers
             _orderRepository = orderRepository;
         }
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetOrders()
         {
             try
             {
                 var result = await _orderRepository.GetOrders();
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -27,6 +36,8 @@ namespace EcommerceAPI.Controllers
             }
         }
         [HttpGet("{OrderId:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> GetOrder(Guid OrderId)
         {
             try
@@ -40,6 +51,8 @@ namespace EcommerceAPI.Controllers
             }
         }
         [HttpPut("{OrderId:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Put(Guid OrderId, UpdateOrderDTO order)
         {
             try
@@ -56,6 +69,8 @@ namespace EcommerceAPI.Controllers
             }
         }
         [HttpDelete("{OrderId:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Delete(Guid OrderId)
         {
             try

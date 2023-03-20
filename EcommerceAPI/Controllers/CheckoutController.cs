@@ -15,9 +15,10 @@ namespace EcommerceAPI.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Checkout([FromBody] CheckoutDTO order)
         {
-
             try
             {
                 if (!ModelState.IsValid)

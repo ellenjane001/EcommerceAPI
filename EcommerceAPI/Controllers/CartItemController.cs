@@ -15,6 +15,8 @@ namespace EcommerceAPI.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get()
         {
             try
@@ -26,9 +28,10 @@ namespace EcommerceAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            return Unauthorized();
         }
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] AddCartItemDTO addCartItem)
         {
             try
@@ -43,6 +46,8 @@ namespace EcommerceAPI.Controllers
         }
 
         [HttpPut("{CartItemId:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Put(Guid CartItemId, [FromBody] UpdateCartItemDTO updateCartItem)
         {
             try
@@ -57,6 +62,8 @@ namespace EcommerceAPI.Controllers
             }
         }
         [HttpDelete("{CartItemId:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Delete(Guid CartItemId)
         {
             try

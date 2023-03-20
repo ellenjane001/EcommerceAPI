@@ -12,11 +12,13 @@ namespace EcommerceAPI.Data.Repositories
     {
         private readonly AppDBContext _dbContext;
         private readonly IDbConnection _connection;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public CartItemRepository(AppDBContext dbContext, AppDapperContext dapperContext)
+        public CartItemRepository(AppDBContext dbContext, AppDapperContext dapperContext, IHttpContextAccessor contextAccessor)
         {
             _dbContext = dbContext;
             _connection = dapperContext.CreateConnection();
+            _contextAccessor = contextAccessor;
         }
 
         public async Task<IEnumerable<CartItem>> GetCartItems()
@@ -28,8 +30,10 @@ namespace EcommerceAPI.Data.Repositories
         }
         public async Task<Guid> Post(AddCartItemDTO cartItem)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.UserId == cartItem.UserId);
-            var orderChecker = await _dbContext.Orders.FirstOrDefaultAsync(order => order.UserId == cartItem.UserId && order.Status == 0);
+            var userId = _contextAccessor.HttpContext!.Request.Headers["x-user-id"].FirstOrDefault();
+            Guid userID = Guid.Parse(userId!);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.UserId == userID);
+            var orderChecker = await _dbContext.Orders.FirstOrDefaultAsync(order => order.UserId == userID && order.Status == 0);
 
             CartItem newCartItem = new()
             {

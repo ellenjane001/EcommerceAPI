@@ -6,8 +6,8 @@ namespace EcommerceAPI.DTO.CartItem
     {
         [Required]
         public string CartItemName { get; set; }
-        [Required]
-        public Guid UserId { get; set; }
+        //[Required]
+        //public Guid UserId { get; set; }
 
     }
 }
