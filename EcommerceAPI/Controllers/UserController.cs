@@ -1,5 +1,6 @@
 ﻿using EcommerceAPI.Data.Interfaces;
 using EcommerceAPI.DTO.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceAPI.Controllers
@@ -14,7 +15,7 @@ namespace EcommerceAPI.Controllers
         {
             _userRepository = userRepository;
         }
-        [HttpGet]
+        [HttpGet, Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get()
