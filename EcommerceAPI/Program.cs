@@ -1,10 +1,11 @@
 using EcommerceAPI.Data.Contexts;
 using EcommerceAPI.Data.Interfaces;
+using EcommerceAPI.Data.Misc;
 using EcommerceAPI.Data.Repositories;
 using EcommerceAPI.Middlewares;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Serilog;
-using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +24,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.OperationFilter<AddHeaderOperationFilter>("x-user-id", "Enter User Id");
+    options.OperationFilter<CustomHeaderFilter>();
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Ecommerce API", Version = "v1" });
 }
 );
 
