@@ -1,8 +1,8 @@
 ﻿using Dapper;
 using EcommerceAPI.Data.Contexts;
 using EcommerceAPI.Data.Interfaces;
+using EcommerceAPI.Domain.Entities;
 using EcommerceAPI.DTO.CartItem;
-using EcommerceAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
@@ -12,11 +12,15 @@ namespace EcommerceAPI.Data.Repositories
     {
         private readonly AppDBContext _dbContext;
         private readonly IDbConnection _connection;
+        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly ILogger _logger;
 
-        public CartItemRepository(AppDBContext dbContext, AppDapperContext dapperContext)
+        public CartItemRepository(AppDBContext dbContext, AppDapperContext dapperContext, IHttpContextAccessor contextAccessor, ILogger<CartItemRepository> logger)
         {
             _dbContext = dbContext;
             _connection = dapperContext.CreateConnection();
+            _contextAccessor = contextAccessor;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<CartItem>> GetCartItems()
@@ -24,12 +28,15 @@ namespace EcommerceAPI.Data.Repositories
             var query = "SELECT * FROM cartitems";
             _connection.Open();
             var cartItems = await _connection.QueryAsync<CartItem>(query);
+            _logger.LogInformation("Successfully fetched cartItems");
             return cartItems.ToList();
         }
         public async Task<Guid> Post(AddCartItemDTO cartItem)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.UserId == cartItem.UserId);
-            var orderChecker = await _dbContext.Orders.FirstOrDefaultAsync(order => order.UserId == cartItem.UserId && order.Status == 0);
+            var userId = _contextAccessor.HttpContext!.Request.Headers["x-user-id"].FirstOrDefault();
+            Guid userID = Guid.Parse(userId!);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.UserId == userID);
+            var orderChecker = await _dbContext.Orders.FirstOrDefaultAsync(order => order.UserId == userID && order.Status == 0);
 
             CartItem newCartItem = new()
             {

@@ -1,5 +1,5 @@
 ﻿using EcommerceAPI.Data.Contexts;
-using EcommerceAPI.Entities;
+using EcommerceAPI.Domain.Entities;
 
 namespace EcommerceAPI.Data.Handlers
 {

@@ -1,7 +1,7 @@
 ﻿using EcommerceAPI.Data.Contexts;
 using EcommerceAPI.Data.Interfaces;
+using EcommerceAPI.Domain.Entities;
 using EcommerceAPI.DTO.Checkout;
-using EcommerceAPI.Entities;
 
 namespace EcommerceAPI.Data.Repositories
 {

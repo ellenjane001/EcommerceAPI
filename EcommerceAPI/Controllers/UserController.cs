@@ -15,6 +15,8 @@ namespace EcommerceAPI.Controllers
             _userRepository = userRepository;
         }
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get()
         {
             try
@@ -28,6 +30,8 @@ namespace EcommerceAPI.Controllers
             }
         }
         [HttpGet("{UserId:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetUser(Guid UserId)
         {
             try
@@ -43,6 +47,8 @@ namespace EcommerceAPI.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Post([FromBody] CreateUserDTO createUser)
         {
             try

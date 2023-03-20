@@ -2,8 +2,8 @@
 using EcommerceAPI.Data.Contexts;
 using EcommerceAPI.Data.Handlers;
 using EcommerceAPI.Data.Interfaces;
+using EcommerceAPI.Domain.Entities;
 using EcommerceAPI.DTO.User;
-using EcommerceAPI.Entities;
 using System.Data;
 
 namespace EcommerceAPI.Data.Repositories
@@ -40,13 +40,24 @@ namespace EcommerceAPI.Data.Repositories
             return users.ToList();
         }
 
-        public async Task<IEnumerable<User>> GetUser(Guid UserId)
+        public async Task<User> GetUser(Guid UserId)
         {
             var query = "SELECT * FROM users WHERE UserId=@UserId";
             var parameters = new { UserId };
             _connection.Open();
-            var user = await _connection.QueryAsync<User>(query, parameters);
-            return user.ToList();
+            var users = await _connection.QueryAsync<User>(query, parameters);
+            var user = users.First();
+            var order = _dbContext.Orders.Where(order => order.UserId == user.UserId).FirstOrDefault();
+            if (user != null && order != null)
+            {
+                user.Orders = new List<Order> { order };
+            }
+            else
+            {
+                throw new Exception("User not found");
+            }
+
+            return user;
         }
         public void Post(CreateUserDTO user)
         {
