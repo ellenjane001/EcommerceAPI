@@ -1,5 +1,5 @@
-﻿using EcommerceAPI.DTO.Checkout;
-using EcommerceAPI.Entities;
+﻿using EcommerceAPI.Domain.Entities;
+using EcommerceAPI.DTO.Checkout;
 
 namespace EcommerceAPI.Data.Interfaces
 {

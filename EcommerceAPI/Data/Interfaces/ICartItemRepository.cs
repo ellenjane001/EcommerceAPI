@@ -1,5 +1,5 @@
-﻿using EcommerceAPI.DTO.CartItem;
-using EcommerceAPI.Entities;
+﻿using EcommerceAPI.Domain.Entities;
+using EcommerceAPI.DTO.CartItem;
 
 namespace EcommerceAPI.Data.Interfaces
 {

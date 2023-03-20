@@ -1,8 +1,8 @@
 ﻿using Dapper;
 using EcommerceAPI.Data.Contexts;
 using EcommerceAPI.Data.Interfaces;
+using EcommerceAPI.Domain.Entities;
 using EcommerceAPI.DTO.CartItem;
-using EcommerceAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 

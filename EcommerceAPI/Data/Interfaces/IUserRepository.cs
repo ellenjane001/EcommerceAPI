@@ -1,5 +1,5 @@
-﻿using EcommerceAPI.DTO.User;
-using EcommerceAPI.Entities;
+﻿using EcommerceAPI.Domain.Entities;
+using EcommerceAPI.DTO.User;
 
 namespace EcommerceAPI.Data.Interfaces
 {

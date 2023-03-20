@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using EcommerceAPI.Data.Contexts;
-using EcommerceAPI.Entities;
+using EcommerceAPI.Domain.Entities;
 using System.Data;
 
 namespace EcommerceAPI.Middlewares

@@ -2,8 +2,8 @@
 using EcommerceAPI.Data.Contexts;
 using EcommerceAPI.Data.Handlers;
 using EcommerceAPI.Data.Interfaces;
+using EcommerceAPI.Domain.Entities;
 using EcommerceAPI.DTO.Order;
-using EcommerceAPI.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 

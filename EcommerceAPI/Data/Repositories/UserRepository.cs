@@ -2,8 +2,8 @@
 using EcommerceAPI.Data.Contexts;
 using EcommerceAPI.Data.Handlers;
 using EcommerceAPI.Data.Interfaces;
+using EcommerceAPI.Domain.Entities;
 using EcommerceAPI.DTO.User;
-using EcommerceAPI.Entities;
 using System.Data;
 
 namespace EcommerceAPI.Data.Repositories
