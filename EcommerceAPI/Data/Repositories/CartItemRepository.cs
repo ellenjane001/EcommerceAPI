@@ -28,6 +28,7 @@ namespace EcommerceAPI.Data.Repositories
             var query = "SELECT * FROM cartitems";
             _connection.Open();
             var cartItems = await _connection.QueryAsync<CartItem>(query);
+            _logger.LogInformation("Successfully fetched cartItems");
             return cartItems.ToList();
         }
         public async Task<Guid> Post(AddCartItemDTO cartItem)
