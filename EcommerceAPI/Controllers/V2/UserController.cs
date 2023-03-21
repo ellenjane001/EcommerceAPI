@@ -4,11 +4,11 @@ using EcommerceAPI.Data.DTO.User;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EcommerceAPI.Controllers.V1
+namespace EcommerceAPI.Controllers.V2
 {
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}/User")]
     [ApiController]
-    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -17,7 +17,6 @@ namespace EcommerceAPI.Controllers.V1
             _mediator = mediator;
         }
         [HttpGet]
-
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get()

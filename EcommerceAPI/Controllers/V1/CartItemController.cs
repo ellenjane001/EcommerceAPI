@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceAPI.Controllers.V1
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
     public class CartItemController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -23,7 +24,6 @@ namespace EcommerceAPI.Controllers.V1
         {
             try
             {
-                //var results = await _cartItemRepository.GetCartItems();
                 var results = await _mediator.Send(new GetCartItemsQuery());
                 return Ok(results);
             }
@@ -39,7 +39,6 @@ namespace EcommerceAPI.Controllers.V1
         {
             try
             {
-                //var res = await _cartItemRepository.Post(addCartItem);
                 await _mediator.Send(new AddCartItemCommand(addCartItem));
                 return NoContent();
             }
@@ -71,9 +70,8 @@ namespace EcommerceAPI.Controllers.V1
         {
             try
             {
-                //_cartItemRepository.Delete(CartItemId);
                 await _mediator.Send(new DeleteCartItemCommand(CartItemId));
-                return Ok();
+                return Ok("Delete Successful");
             }
             catch (Exception ex)
             {

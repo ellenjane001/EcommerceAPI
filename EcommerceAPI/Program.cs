@@ -1,7 +1,10 @@
 using EcommerceAPI.Data.Contexts;
+using EcommerceAPI.Data.Miscellaneous;
 using EcommerceAPI.Domain.Interfaces;
 using EcommerceAPI.Domain.Repositories;
 using EcommerceAPI.Middlewares;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
@@ -27,13 +30,33 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<AddHeaderOperationFilter>("x-user-id", "Enter User Id", true);
 }
 );
-
+builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+});
+builder.Services.AddVersionedApiExplorer(setup =>
+{
+    setup.GroupNameFormat = "'v'VVV";
+    setup.SubstituteApiVersionInUrl = true;
+});
 var app = builder.Build();
+var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+        {
+            options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+                description.GroupName.ToUpperInvariant());
+        }
+
+    });
 }
 app.UseMiddleware<AuthMiddleware>();
 app.UseHttpsRedirection();
