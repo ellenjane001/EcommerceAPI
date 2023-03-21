@@ -1,6 +1,9 @@
 ﻿using EcommerceAPI.CQRS.Commands.OrderCommands;
 using EcommerceAPI.CQRS.Queries;
 using EcommerceAPI.Data.DTO.Order;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,9 +15,11 @@ namespace EcommerceAPI.Controllers.V1
     public class OrderController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public OrderController(IMediator mediator)
+        private readonly IValidator<UpdateOrderDTO> _validator;
+        public OrderController(IMediator mediator, IValidator<UpdateOrderDTO> validator)
         {
             _mediator = mediator;
+            _validator = validator;
         }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -62,13 +67,13 @@ namespace EcommerceAPI.Controllers.V1
         {
             try
             {
+                ValidationResult result = await _validator.ValidateAsync(order);
+                if (!result.IsValid)
+                {
+                    result.AddToModelState(this.ModelState);
+                }
                 await _mediator.Send(new PutOrderCommand(OrderId, order));
                 return NoContent();
-                //var result = _orderRepository.Put(OrderId, order);
-                //if (result)
-                //return Ok(result);
-                //else
-                //return NotFound();
             }
             catch (Exception ex)
             {

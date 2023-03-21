@@ -31,12 +31,12 @@ namespace EcommerceAPI.Data.Miscellaneous
             Configure(options);
         }
 
-        private OpenApiInfo CreateVersionInfo(
+        private static OpenApiInfo CreateVersionInfo(
                 ApiVersionDescription description)
         {
             var info = new OpenApiInfo()
             {
-                Title = "Heroes API",
+                Title = "Ecommerce API",
                 Version = description.ApiVersion.ToString()
             };
 
