@@ -1,6 +1,6 @@
 using EcommerceAPI.Data.Contexts;
-using EcommerceAPI.Data.Interfaces;
-using EcommerceAPI.Data.Repositories;
+using EcommerceAPI.Domain.Interfaces;
+using EcommerceAPI.Domain.Repositories;
 using EcommerceAPI.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -24,24 +24,19 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.OperationFilter<AddHeaderOperationFilter>("x-user-id", "Enter User Id");
+    options.OperationFilter<AddHeaderOperationFilter>("x-user-id", "Enter User Id", true);
 }
 );
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseMiddleware<AuthMiddleware>();
-
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 

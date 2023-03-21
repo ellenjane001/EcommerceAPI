@@ -10,7 +10,6 @@ namespace EcommerceAPI.Data.Miscellaneous
         {
             _dbContext = dBContext;
         }
-
         public IEnumerable<CartItem> GetCartItemsByOrderId(Guid[] OrderIds)
         {
             return _dbContext.CartItems.Where(c => OrderIds.Any(orId => orId.Equals(c.OrderId))).ToList();
