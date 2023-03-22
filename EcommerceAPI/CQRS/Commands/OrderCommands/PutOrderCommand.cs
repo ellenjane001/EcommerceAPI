@@ -3,5 +3,15 @@ using MediatR;
 
 namespace EcommerceAPI.CQRS.Commands.OrderCommands
 {
-    public record PutOrderCommand(Guid OrderId, UpdateOrderDTO Order) : IRequest;
+    public class PutOrderCommand : IRequest
+    {
+        public Guid OrderId { get; set; }
+        public UpdateOrderDTO OrderDTO { get; set; }
+
+        public PutOrderCommand(Guid orderId, UpdateOrderDTO orderDTO)
+        {
+            OrderId = orderId;
+            OrderDTO = orderDTO;
+        }
+    }
 }

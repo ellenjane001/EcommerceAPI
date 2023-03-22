@@ -15,7 +15,7 @@ namespace EcommerceAPI.CQRS.Handlers.OrderHandlers
 
         public async Task Handle(PutOrderCommand request, CancellationToken cancellationToken)
         {
-            await _orderRepository.Put(request.OrderId, request.Order);
+            await _orderRepository.Put(request.OrderId, request.OrderDTO);
             return;
         }
     }

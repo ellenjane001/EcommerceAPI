@@ -1,13 +1,13 @@
-﻿using EcommerceAPI.Data.DTO.User;
+﻿using EcommerceAPI.CQRS.Commands.UserCommands;
 using FluentValidation;
 
 namespace EcommerceAPI.Validators
 {
-    public class CreateUserValidator : AbstractValidator<CreateUserDTO>
+    public class CreateUserValidator : AbstractValidator<AddUserCommand>
     {
         public CreateUserValidator()
         {
-            RuleFor(user => user.UserName).NotEmpty().NotNull().Equals("string");
+            RuleFor(user => user.User.UserName).NotEmpty().NotNull().Equals("string");
         }
     }
 }

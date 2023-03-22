@@ -3,5 +3,14 @@ using MediatR;
 
 namespace EcommerceAPI.CQRS.Commands.CartItemCommands
 {
-    public record PutCartItemCommand(Guid CartItemId, UpdateCartItemDTO CartItem) : IRequest;
+    public class PutCartItemCommand : IRequest
+    {
+        public Guid CartItemId { get; set; }
+        public UpdateCartItemDTO CartItemDTO { get; set; }
+        public PutCartItemCommand(Guid cartItemId, UpdateCartItemDTO cartItemDTO)
+        {
+            CartItemId = cartItemId;
+            CartItemDTO = cartItemDTO;
+        }
+    }
 }

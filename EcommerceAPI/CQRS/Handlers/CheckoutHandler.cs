@@ -13,7 +13,7 @@ namespace EcommerceAPI.CQRS.Handlers
         }
         public async Task Handle(CheckoutOrderCommand request, CancellationToken cancellationToken)
         {
-            await _checkoutRepository.Checkout(request.Order);
+            await _checkoutRepository.Checkout(request.Checkout);
             return;
         }
     }

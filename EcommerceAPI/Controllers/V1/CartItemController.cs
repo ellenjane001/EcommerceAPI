@@ -1,9 +1,6 @@
 ﻿using EcommerceAPI.CQRS.Commands.CartItemCommands;
 using EcommerceAPI.CQRS.Queries;
 using EcommerceAPI.Data.DTO.CartItem;
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,13 +12,9 @@ namespace EcommerceAPI.Controllers.V1
     public class CartItemController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IValidator<AddCartItemDTO> _addCartItemValidator;
-        private readonly IValidator<UpdateCartItemDTO> _updateCartItemValidator;
-        public CartItemController(IMediator mediator, IValidator<AddCartItemDTO> addCartItemValidator, IValidator<UpdateCartItemDTO> updateCartItemValidator)
+        public CartItemController(IMediator mediator)
         {
             _mediator = mediator;
-            _addCartItemValidator = addCartItemValidator;
-            _updateCartItemValidator = updateCartItemValidator;
         }
 
         [HttpGet]
@@ -46,11 +39,6 @@ namespace EcommerceAPI.Controllers.V1
         {
             try
             {
-                ValidationResult result = await _addCartItemValidator.ValidateAsync(addCartItem);
-                if (!result.IsValid)
-                {
-                    result.AddToModelState(this.ModelState);
-                }
                 await _mediator.Send(new AddCartItemCommand(addCartItem));
                 return NoContent();
             }
@@ -67,11 +55,6 @@ namespace EcommerceAPI.Controllers.V1
         {
             try
             {
-                ValidationResult result = await _updateCartItemValidator.ValidateAsync(updateCartItem);
-                if (!result.IsValid)
-                {
-                    result.AddToModelState(this.ModelState);
-                }
                 await _mediator.Send(new PutCartItemCommand(CartItemId, updateCartItem));
                 return NoContent();
             }

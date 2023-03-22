@@ -1,13 +1,13 @@
-﻿using EcommerceAPI.Data.DTO.Order;
+﻿using EcommerceAPI.CQRS.Commands.OrderCommands;
 using FluentValidation;
 
 namespace EcommerceAPI.Validators
 {
-    public class OrderValidator : AbstractValidator<UpdateOrderDTO>
+    public class OrderValidator : AbstractValidator<PutOrderCommand>
     {
         public OrderValidator()
         {
-            RuleFor(order => order.Status).NotEmpty();
+            RuleFor(order => order.OrderDTO.Status).NotEmpty();
         }
     }
 }

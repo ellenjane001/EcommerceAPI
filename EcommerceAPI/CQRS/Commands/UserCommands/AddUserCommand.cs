@@ -3,6 +3,14 @@ using MediatR;
 
 namespace EcommerceAPI.CQRS.Commands.UserCommands
 {
-    public record AddUserCommand(CreateUserDTO User) : IRequest;
+    public class AddUserCommand : IRequest
+    {
+        public CreateUserDTO User { get; set; }
+
+        public AddUserCommand(CreateUserDTO user)
+        {
+            User = user;
+        }
+    }
 
 }

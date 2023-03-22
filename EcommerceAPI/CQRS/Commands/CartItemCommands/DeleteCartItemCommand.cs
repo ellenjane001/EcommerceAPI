@@ -2,5 +2,13 @@
 
 namespace EcommerceAPI.CQRS.Commands.CartItemCommands
 {
-    public record DeleteCartItemCommand(Guid CartItemId) : IRequest;
+    public class DeleteCartItemCommand : IRequest
+    {
+        public Guid CartItemId { get; set; }
+
+        public DeleteCartItemCommand(Guid cartItemId)
+        {
+            CartItemId = cartItemId;
+        }
+    }
 }

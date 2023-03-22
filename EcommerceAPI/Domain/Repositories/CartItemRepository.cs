@@ -3,6 +3,7 @@ using EcommerceAPI.Data.Contexts;
 using EcommerceAPI.Data.DTO.CartItem;
 using EcommerceAPI.Domain.Entities;
 using EcommerceAPI.Domain.Interfaces;
+using EcommerceAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 
@@ -23,13 +24,23 @@ namespace EcommerceAPI.Domain.Repositories
             _logger = logger;
         }
 
-        public async Task<IEnumerable<CartItem>> GetCartItems()
+        public async Task<IEnumerable<Entities.CartItem>> GetCartItems()
         {
-            var query = "SELECT * FROM cartitems";
+            var uid = Guid.Parse(_contextAccessor.HttpContext!.Request.Headers["x-user-id"]!);
+            var orderQuery = "SELECT * FROM orders WHERE status = 0 AND UserId = @UserId";
+            var parameters = new { UserId = uid };
             _connection.Open();
-            var cartItems = await _connection.QueryAsync<CartItem>(query);
+            var orders = await _connection.QueryAsync<Entities.Order>(orderQuery, parameters);
+            IEnumerable<Entities.CartItem> cartItems = new List<Entities.CartItem>();
+            foreach (var order in orders)
+            {
+                var query = "SELECT * FROM cartitems WHERE OrderId = @OrderId";
+                var parameter = new { order.OrderId };
+                cartItems = await _connection.QueryAsync<Entities.CartItem>(query, parameter);
+            }
+
             _logger.LogInformation("Successfully fetched cartItems");
-            return cartItems.ToList();
+            return cartItems;
         }
         public async Task<Guid> Post(AddCartItemDTO cartItem)
         {
@@ -38,7 +49,7 @@ namespace EcommerceAPI.Domain.Repositories
             var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.UserId == userID);
             var orderChecker = await _dbContext.Orders.FirstOrDefaultAsync(order => order.UserId == userID && order.Status == 0);
 
-            CartItem newCartItem = new()
+            Entities.CartItem newCartItem = new()
             {
                 CartItemName = cartItem.CartItemName,
                 UserId = user!.UserId,
@@ -51,10 +62,10 @@ namespace EcommerceAPI.Domain.Repositories
             }
             else
             {
-                Order order = new()
+                Entities.Order order = new()
                 {
                     UserId = user!.UserId,
-                    CartItems = new List<CartItem>()
+                    CartItems = new List<Entities.CartItem>()
                 {
                     newCartItem
                 }

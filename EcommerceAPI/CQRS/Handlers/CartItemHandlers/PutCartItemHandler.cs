@@ -13,7 +13,7 @@ namespace EcommerceAPI.CQRS.Handlers.CartItemHandlers
         }
         public async Task Handle(PutCartItemCommand request, CancellationToken cancellationToken)
         {
-            await _cartItemRepository.Put(request.CartItemId, request.CartItem);
+            await _cartItemRepository.Put(request.CartItemId, request.CartItemDTO);
             return;
         }
     }

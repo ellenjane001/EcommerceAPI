@@ -66,6 +66,10 @@ namespace EcommerceAPI.Domain.Repositories
             {
                 UserName = user.UserName
             };
+            if (_dbContext.Users.FirstOrDefault(u => u.UserName!.Equals(newUser.UserName)) != null)
+            {
+                throw new Exception("User already exists");
+            }
             _dbContext.Users.Add(newUser);
             await _dbContext.SaveChangesAsync();
         }

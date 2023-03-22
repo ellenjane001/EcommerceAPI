@@ -1,7 +1,6 @@
-﻿using EcommerceAPI.Domain.Entities;
-using MediatR;
+﻿using MediatR;
 
 namespace EcommerceAPI.CQRS.Queries
 {
-    public record GetCartItemsQuery() : IRequest<IEnumerable<CartItem>>;
+    public record GetCartItemsQuery() : IRequest<IEnumerable<Domain.Entities.CartItem>>;
 }

@@ -1,37 +1,25 @@
-using EcommerceAPI.Data.Contexts;
-using EcommerceAPI.Data.DTO.CartItem;
-using EcommerceAPI.Data.DTO.Order;
-using EcommerceAPI.Data.DTO.User;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using EcommerceAPI.Data.Miscellaneous;
-using EcommerceAPI.Domain.Interfaces;
-using EcommerceAPI.Domain.Repositories;
 using EcommerceAPI.Middlewares;
-using EcommerceAPI.Validators;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var containerBuilder = new ContainerBuilder();
 // Add services to the container.
+
+//Logger
 Log.Logger = new LoggerConfiguration().MinimumLevel.Information().WriteTo.File("logs/EcommerceLogs.txt", rollingInterval: RollingInterval.Day).CreateLogger();
+
+//Serilog
 builder.Host.UseSerilog();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
-builder.Services.AddScoped<ICheckoutRepository, CheckoutRepository>();
-builder.Services.AddScoped<IValidator<UpdateOrderDTO>, OrderValidator>();
-builder.Services.AddScoped<IValidator<AddCartItemDTO>, AddCartItemValidator>();
-builder.Services.AddScoped<IValidator<CreateUserDTO>, CreateUserValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<OrderValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<AddCartItemValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
+
+//MediatR
 builder.Services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(Program).Assembly));
-builder.Services.AddSingleton<AppDapperContext>();
-builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection")));
+
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -53,6 +41,14 @@ builder.Services.AddVersionedApiExplorer(setup =>
     setup.GroupNameFormat = "'v'VVV";
     setup.SubstituteApiVersionInUrl = true;
 });
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+IConfiguration Configuration = new ConfigurationBuilder()
+               .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+               .AddEnvironmentVariables()
+               .AddCommandLine(args)
+               .Build();
+builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacConfig(Configuration)));
+builder.Services.AddAutofac();
 var app = builder.Build();
 var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 // Configure the HTTP request pipeline.
@@ -66,12 +62,12 @@ if (app.Environment.IsDevelopment())
             options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
                 description.GroupName.ToUpperInvariant());
         }
-
     });
 }
+//add auth middleware
 app.UseMiddleware<AuthMiddleware>();
+
+
 app.UseHttpsRedirection();
-
 app.MapControllers();
-
 app.Run();

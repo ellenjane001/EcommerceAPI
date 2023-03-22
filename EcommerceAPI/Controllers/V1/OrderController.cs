@@ -1,9 +1,6 @@
 ﻿using EcommerceAPI.CQRS.Commands.OrderCommands;
 using EcommerceAPI.CQRS.Queries;
 using EcommerceAPI.Data.DTO.Order;
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,11 +12,9 @@ namespace EcommerceAPI.Controllers.V1
     public class OrderController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IValidator<UpdateOrderDTO> _validator;
-        public OrderController(IMediator mediator, IValidator<UpdateOrderDTO> validator)
+        public OrderController(IMediator mediator)
         {
             _mediator = mediator;
-            _validator = validator;
         }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -30,7 +25,6 @@ namespace EcommerceAPI.Controllers.V1
         {
             try
             {
-                //var result = await _orderRepository.GetOrders();       
                 var result = await _mediator.Send(new GetOrdersQuery());
                 if (result == null)
                 {
@@ -51,7 +45,6 @@ namespace EcommerceAPI.Controllers.V1
         {
             try
             {
-                //var result = await _orderRepository.GetOrder(OrderId);
                 var result = await _mediator.Send(new GetOrderByIDQuery(OrderId));
                 return Ok(result);
             }
@@ -67,11 +60,6 @@ namespace EcommerceAPI.Controllers.V1
         {
             try
             {
-                ValidationResult result = await _validator.ValidateAsync(order);
-                if (!result.IsValid)
-                {
-                    result.AddToModelState(this.ModelState);
-                }
                 await _mediator.Send(new PutOrderCommand(OrderId, order));
                 return NoContent();
             }
@@ -87,7 +75,6 @@ namespace EcommerceAPI.Controllers.V1
         {
             try
             {
-                //_orderRepository.Delete(OrderId);
                 await _mediator.Send(new DeleteOrderCommand(OrderId));
                 return NoContent();
             }

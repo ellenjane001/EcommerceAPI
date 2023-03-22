@@ -1,13 +1,13 @@
-﻿using EcommerceAPI.Data.DTO.CartItem;
+﻿using EcommerceAPI.CQRS.Commands.CartItemCommands;
 using FluentValidation;
 
 namespace EcommerceAPI.Validators
 {
-    public class UpdateCartItemValidator : AbstractValidator<UpdateCartItemDTO>
+    public class UpdateCartItemValidator : AbstractValidator<PutCartItemCommand>
     {
         public UpdateCartItemValidator()
         {
-            RuleFor(cartItem => cartItem.CartItemName).NotEmpty();
+            RuleFor(cartItem => cartItem.CartItemDTO.CartItemName).NotEmpty();
         }
     }
 }

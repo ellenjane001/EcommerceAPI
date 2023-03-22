@@ -3,6 +3,10 @@ using MediatR;
 
 namespace EcommerceAPI.CQRS.Commands
 {
-    public record CheckoutOrderCommand(CheckoutDTO Order) : IRequest;
+    public class CheckoutOrderCommand : IRequest
+    {
+        public CheckoutDTO Checkout { get; set; }
+        public CheckoutOrderCommand(CheckoutDTO checkout) { Checkout = checkout; }
+    }
 
 }

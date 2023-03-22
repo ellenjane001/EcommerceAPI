@@ -2,5 +2,14 @@
 
 namespace EcommerceAPI.CQRS.Commands.OrderCommands
 {
-    public record DeleteOrderCommand(Guid OrderId) : IRequest;
+    public class DeleteOrderCommand : IRequest
+    {
+        public Guid OrderId { get; set; }
+
+        public DeleteOrderCommand(Guid orderId)
+        {
+            OrderId = orderId;
+        }
+    }
+
 }
