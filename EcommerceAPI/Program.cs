@@ -20,6 +20,8 @@ builder.Host.UseSerilog();
 //MediatR
 builder.Services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
+builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -27,8 +29,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.OperationFilter<AddHeaderOperationFilter>("x-user-id", "Enter User Id", true);
-}
-);
+});
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 builder.Services.AddApiVersioning(options =>
 {
@@ -36,11 +37,13 @@ builder.Services.AddApiVersioning(options =>
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.ReportApiVersions = true;
 });
+
 builder.Services.AddVersionedApiExplorer(setup =>
 {
     setup.GroupNameFormat = "'v'VVV";
     setup.SubstituteApiVersionInUrl = true;
 });
+
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 IConfiguration Configuration = new ConfigurationBuilder()
                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -66,7 +69,7 @@ if (app.Environment.IsDevelopment())
 }
 //add auth middleware
 app.UseMiddleware<AuthMiddleware>();
-
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 app.MapControllers();

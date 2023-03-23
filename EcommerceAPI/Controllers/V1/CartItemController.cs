@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceAPI.Controllers.V1
 {
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}/cart-items")]
     [ApiController]
     [ApiVersion("1.0")]
     public class CartItemController : ControllerBase

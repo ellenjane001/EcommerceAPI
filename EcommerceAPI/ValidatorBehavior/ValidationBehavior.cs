@@ -6,22 +6,22 @@ namespace EcommerceAPI.ValidatorBehavior
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
-        private readonly IValidator<TRequest> _validator;
+        private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-        public ValidationBehavior(IValidator<TRequest> validator)
+        public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
         {
-            _validator = validator;
+            _validators = validators;
         }
-
 
         public Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            var validationResult = _validator.Validate(request);
-
-            if (!validationResult.IsValid)
+            var context = new ValidationContext<TRequest>(request);
+            var failures = _validators.Select(x => x.Validate(context)).SelectMany(x => x.Errors).Where(x => x != null).ToList();
+            if (failures.Any())
             {
-                throw new ValidationException(validationResult.Errors);
+                throw new ValidationException(failures);
             }
+
 
             return next();
         }

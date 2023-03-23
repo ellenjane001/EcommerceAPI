@@ -10,6 +10,7 @@ using FluentValidation;
 using MediatR;
 using MediatR.Extensions.FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace EcommerceAPI.Data.Miscellaneous
 {
@@ -22,7 +23,6 @@ namespace EcommerceAPI.Data.Miscellaneous
         }
         protected override void Load(ContainerBuilder builder)
         {
-
             //Repositories
             builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerLifetimeScope();
             builder.RegisterType<OrderRepository>().As<IOrderRepository>().InstancePerLifetimeScope();
@@ -32,12 +32,15 @@ namespace EcommerceAPI.Data.Miscellaneous
             //Validation
             builder.RegisterGeneric(typeof(ValidationBehavior<,>)).As(typeof(IPipelineBehavior<,>)).InstancePerDependency();
 
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+                   .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
+                   .AsImplementedInterfaces()
+                   .InstancePerLifetimeScope();
 
             builder.RegisterType<AddCartItemValidator>().As<IValidator<AddCartItemCommand>>().InstancePerDependency();
             builder.RegisterType<UpdateCartItemValidator>().As<IValidator<PutCartItemCommand>>().InstancePerDependency();
             builder.RegisterType<CreateUserValidator>().As<IValidator<AddUserCommand>>().InstancePerDependency();
             builder.RegisterType<OrderValidator>().As<IValidator<PutOrderCommand>>().InstancePerDependency();
-
 
             //Dapper
             builder.RegisterType<AppDapperContext>().SingleInstance();

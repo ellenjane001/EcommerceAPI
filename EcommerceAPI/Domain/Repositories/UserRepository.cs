@@ -4,6 +4,7 @@ using EcommerceAPI.Data.DTO.User;
 using EcommerceAPI.Data.Miscellaneous;
 using EcommerceAPI.Domain.Entities;
 using EcommerceAPI.Domain.Interfaces;
+using EcommerceAPI.Enums;
 using System.Data;
 
 namespace EcommerceAPI.Domain.Repositories
@@ -12,11 +13,13 @@ namespace EcommerceAPI.Domain.Repositories
     {
         private readonly IDbConnection _connection;
         private readonly AppDBContext _dbContext;
+        private readonly OrderStatus[] _orderStatus;
 
-        public UserRepository(AppDBContext _db, AppDapperContext dapperContext)
+        public UserRepository(AppDBContext _db, AppDapperContext dapperContext, OrderStatus orderStatus)
         {
             _dbContext = _db;
             _connection = dapperContext.CreateConnection();
+            _orderStatus = Enum.GetValues<OrderStatus>();
 
         }
         public async Task<IEnumerable<User>> GetUsers()
@@ -33,6 +36,7 @@ namespace EcommerceAPI.Domain.Repositories
             foreach (var order in orders)
             {
                 order.CartItems = cartItems.Where(cartItem => cartItem.OrderId == order.OrderId).ToList();
+                order.Status = (short)_orderStatus[order.Status];
             }
             foreach (var user in users)
             {
