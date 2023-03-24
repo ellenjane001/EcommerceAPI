@@ -8,7 +8,7 @@ namespace EcommerceAPI.Validators
         public AddCartItemValidator()
         {
             RuleFor(cartItem => cartItem.CartItem.CartItemName).NotEqual("string", StringComparer.OrdinalIgnoreCase)
-            .WithMessage("The value 'string' is not allowed.").NotEmpty().WithMessage("Must not be empty").NotNull();
+            .WithMessage("The value 'string' is not allowed.").NotEmpty().WithMessage("Must not be empty").NotNull().WithMessage("Null is not allowed");
         }
     }
 }

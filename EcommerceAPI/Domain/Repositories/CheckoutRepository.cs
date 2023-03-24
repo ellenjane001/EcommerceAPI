@@ -8,13 +8,17 @@ namespace EcommerceAPI.Domain.Repositories
     public class CheckoutRepository : ICheckoutRepository
     {
         private readonly AppDBContext _dbContext;
-        public CheckoutRepository(AppDBContext dBContext)
+        private readonly IHttpContextAccessor _httpContext;
+        public CheckoutRepository(AppDBContext dBContext, IHttpContextAccessor httpContext)
         {
             _dbContext = dBContext;
+            _httpContext = httpContext;
         }
         public async Task<Order> Checkout(CheckoutDTO order)
         {
-            var UOrder = _dbContext.Orders.FirstOrDefault(o => o.OrderId == order.OrderId);
+            var userId = Guid.Parse(_httpContext.HttpContext!.Request.Headers["x-user-id"]!);
+            var UOrder = _dbContext.Orders.FirstOrDefault(o => o.UserId == userId && o.Status == 0);
+
             if (UOrder == null)
                 throw new Exception("Not Found");
             else

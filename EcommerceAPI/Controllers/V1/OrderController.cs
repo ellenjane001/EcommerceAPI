@@ -26,11 +26,6 @@ namespace EcommerceAPI.Controllers.V1
             try
             {
                 var result = await _mediator.Send(new GetOrdersQuery());
-                if (result == null)
-                {
-                    return NotFound();
-                }
-
                 return Ok(result);
             }
             catch (Exception ex)
@@ -61,7 +56,7 @@ namespace EcommerceAPI.Controllers.V1
             try
             {
                 await _mediator.Send(new PutOrderCommand(OrderId, order));
-                return NoContent();
+                return Ok("Order Successfully updated");
             }
             catch (Exception ex)
             {
@@ -76,7 +71,7 @@ namespace EcommerceAPI.Controllers.V1
             try
             {
                 await _mediator.Send(new DeleteOrderCommand(OrderId));
-                return NoContent();
+                return Ok("Delete Success");
             }
             catch (Exception ex)
             {

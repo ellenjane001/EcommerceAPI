@@ -26,7 +26,7 @@ namespace EcommerceAPI.Data.Miscellaneous
             }
         }
 
-        public void Configure(string name, SwaggerGenOptions options)
+        public void Configure(string? name, SwaggerGenOptions options)
         {
             Configure(options);
         }

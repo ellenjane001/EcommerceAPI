@@ -7,10 +7,7 @@ using EcommerceAPI.Domain.Interfaces;
 using EcommerceAPI.Domain.Repositories;
 using EcommerceAPI.Validators;
 using FluentValidation;
-using MediatR;
-using MediatR.Extensions.FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 namespace EcommerceAPI.Data.Miscellaneous
 {
@@ -30,12 +27,7 @@ namespace EcommerceAPI.Data.Miscellaneous
             builder.RegisterType<CheckoutRepository>().As<ICheckoutRepository>().InstancePerLifetimeScope();
 
             //Validation
-            builder.RegisterGeneric(typeof(ValidationBehavior<,>)).As(typeof(IPipelineBehavior<,>)).InstancePerDependency();
-
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                   .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
-                   .AsImplementedInterfaces()
-                   .InstancePerLifetimeScope();
+            //builder.RegisterGeneric(typeof(ValidatorBehavior.ValidationBehavior<,>)).As(typeof(IPipelineBehavior<,>)).InstancePerDependency();
 
             builder.RegisterType<AddCartItemValidator>().As<IValidator<AddCartItemCommand>>().InstancePerDependency();
             builder.RegisterType<UpdateCartItemValidator>().As<IValidator<PutCartItemCommand>>().InstancePerDependency();

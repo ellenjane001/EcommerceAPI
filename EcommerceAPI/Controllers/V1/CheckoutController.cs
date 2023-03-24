@@ -23,10 +23,6 @@ namespace EcommerceAPI.Controllers.V1
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
                 await _mediator.Send(new CheckoutOrderCommand(order));
                 return Ok();
 
