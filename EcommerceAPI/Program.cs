@@ -24,7 +24,6 @@ builder.Host.UseSerilog();
 //MediatR
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-//builder.Services.AddMediatR(Assembly.GetExecutingAssembly(), null);
 builder.Services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(Program).Assembly));
 //builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 

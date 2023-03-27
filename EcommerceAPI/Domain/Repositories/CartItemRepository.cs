@@ -73,6 +73,7 @@ namespace EcommerceAPI.Domain.Repositories
                 _dbContext.Orders.Add(order);
             }
             await _dbContext.SaveChangesAsync();
+            _logger.LogInformation("Successfully added new cart item");
             return newCartItem.CartItemId;
         }
 
@@ -83,13 +84,14 @@ namespace EcommerceAPI.Domain.Repositories
             CartItem.CartItemName = cartItem.CartItemName;
             _dbContext.CartItems.Update(CartItem);
             await _dbContext.SaveChangesAsync();
+            _logger.LogInformation($"Put {CartItemId}");
         }
         public async Task Delete(Guid CartItemId)
         {
             var CartItem = _dbContext.CartItems.FirstOrDefault(c => c.CartItemId.Equals(CartItemId)) ?? throw new Exception("Not Found");
             _dbContext.CartItems.Remove(CartItem);
             await _dbContext.SaveChangesAsync();
-
+            _logger.LogInformation($"Delete Success {CartItemId}");
         }
     }
 }

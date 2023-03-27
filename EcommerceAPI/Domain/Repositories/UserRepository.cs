@@ -12,12 +12,13 @@ namespace EcommerceAPI.Domain.Repositories
     {
         private readonly IDbConnection _connection;
         private readonly AppDBContext _dbContext;
+        private readonly ILogger _logger;
 
-        public UserRepository(AppDBContext _db, AppDapperContext dapperContext)
+        public UserRepository(AppDBContext _db, AppDapperContext dapperContext, ILogger logger)
         {
             _dbContext = _db;
             _connection = dapperContext.CreateConnection();
-
+            _logger = logger;
         }
         public async Task<IEnumerable<User>> GetUsers()
         {
@@ -38,6 +39,7 @@ namespace EcommerceAPI.Domain.Repositories
             {
                 user.Orders = orders.Where(order => order.UserId == user.UserId).ToList();
             }
+            _logger.LogInformation("successfully fetched list of users");
             return users.ToList();
         }
 
@@ -57,7 +59,7 @@ namespace EcommerceAPI.Domain.Repositories
             {
                 throw new Exception("User not found");
             }
-
+            _logger.LogInformation($"{nameof(GetUser)}");
             return user;
         }
         public async Task Post(CreateUserDTO user)
@@ -72,6 +74,7 @@ namespace EcommerceAPI.Domain.Repositories
             }
             _dbContext.Users.Add(newUser);
             await _dbContext.SaveChangesAsync();
+            _logger.LogInformation($"Post user: {user.UserName}");
         }
     }
 }
