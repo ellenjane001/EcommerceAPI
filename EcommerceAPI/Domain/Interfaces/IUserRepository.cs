@@ -7,6 +7,6 @@ namespace EcommerceAPI.Domain.Interfaces
     {
         Task<IEnumerable<User>> GetUsers();
         Task<User> GetUser(Guid UserId);
-        Task Post(CreateUserDTO user);
+        Task<Guid> Post(CreateUserDTO user);
     }
 }

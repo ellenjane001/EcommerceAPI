@@ -16,6 +16,12 @@ namespace EcommerceAPI.Middlewares
         }
         public async Task InvokeAsync(HttpContext context)
         {
+
+            if (StringCompare(context, "/api/v1/Users"))
+            {
+                await _next(context);
+                return;
+            }
             var header = context.Request.Headers.ContainsKey("x-user-id");
             if (!header)
             {
@@ -49,5 +55,16 @@ namespace EcommerceAPI.Middlewares
             }
 
         }
+
+        private static bool StringCompare(HttpContext context, string route)
+        {
+            var stringComparison = context.Request.Path.Equals(route, StringComparison.OrdinalIgnoreCase);
+
+            return stringComparison;
+
+        }
+
+
+
     }
 }

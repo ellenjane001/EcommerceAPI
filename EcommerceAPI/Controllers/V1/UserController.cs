@@ -9,6 +9,10 @@ namespace EcommerceAPI.Controllers.V1
     [Route("api/v{version:apiVersion}/users")]
     [ApiController]
     [ApiVersion("1.0")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -16,24 +20,7 @@ namespace EcommerceAPI.Controllers.V1
         {
             _mediator = mediator;
         }
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Get()
-        {
-            try
-            {
-                var result = await _mediator.Send(new GetUsersQuery());
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
         [HttpGet("{UserId:Guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetUser(Guid UserId)
         {
             try
@@ -49,14 +36,12 @@ namespace EcommerceAPI.Controllers.V1
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] CreateUserDTO createUser)
         {
             try
             {
-                await _mediator.Send(new AddUserCommand(createUser));
-                return Ok("Successfully added user");
+                var res = await _mediator.Send(new AddUserCommand(createUser));
+                return Ok(res);
             }
             catch (Exception ex)
             {

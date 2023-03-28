@@ -27,8 +27,6 @@ namespace EcommerceAPI.Data.Miscellaneous
             builder.RegisterType<CheckoutRepository>().As<ICheckoutRepository>().InstancePerLifetimeScope();
 
             //Validation
-            //builder.RegisterGeneric(typeof(ValidatorBehavior.ValidationBehavior<,>)).As(typeof(IPipelineBehavior<,>)).InstancePerDependency();
-
             builder.RegisterType<AddCartItemValidator>().As<IValidator<AddCartItemCommand>>().InstancePerDependency();
             builder.RegisterType<UpdateCartItemValidator>().As<IValidator<PutCartItemCommand>>().InstancePerDependency();
             builder.RegisterType<CreateUserValidator>().As<IValidator<AddUserCommand>>().InstancePerDependency();
@@ -36,6 +34,7 @@ namespace EcommerceAPI.Data.Miscellaneous
 
             //Dapper
             builder.RegisterType<AppDapperContext>().SingleInstance();
+
             //Database EF core
             builder.Register(c =>
             {

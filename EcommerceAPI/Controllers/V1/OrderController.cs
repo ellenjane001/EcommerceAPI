@@ -9,6 +9,10 @@ namespace EcommerceAPI.Controllers.V1
     [Route("api/v{version:apiVersion}/orders")]
     [ApiController]
     [ApiVersion("1.0")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public class OrderController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -17,10 +21,6 @@ namespace EcommerceAPI.Controllers.V1
             _mediator = mediator;
         }
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetOrders()
         {
             try
@@ -34,8 +34,6 @@ namespace EcommerceAPI.Controllers.V1
             }
         }
         [HttpGet("{OrderId:Guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> GetOrder(Guid OrderId)
         {
             try
@@ -49,8 +47,6 @@ namespace EcommerceAPI.Controllers.V1
             }
         }
         [HttpPut("{OrderId:Guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Put(Guid OrderId, UpdateOrderDTO order)
         {
             try
@@ -64,8 +60,6 @@ namespace EcommerceAPI.Controllers.V1
             }
         }
         [HttpDelete("{OrderId:Guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Delete(Guid OrderId)
         {
             try

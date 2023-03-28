@@ -8,7 +8,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Serilog;
-using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,9 +23,7 @@ builder.Host.UseSerilog();
 //MediatR
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-//builder.Services.AddMediatR(Assembly.GetExecutingAssembly(), null);
 builder.Services.AddMediatR(options => options.RegisterServicesFromAssembly(typeof(Program).Assembly));
-//builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
@@ -34,12 +31,11 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.OperationFilter<AddHeaderOperationFilter>("x-user-id", "Enter User Id", true);
+    options.OperationFilter<CustomHeaderOperationFilter>();
 });
 
 //add custom swagger options
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
-
 
 //api versioning
 builder.Services.AddApiVersioning(options =>
@@ -48,6 +44,7 @@ builder.Services.AddApiVersioning(options =>
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.ReportApiVersions = true;
 });
+
 //api versioning
 builder.Services.AddVersionedApiExplorer(setup =>
 {
@@ -64,6 +61,7 @@ IConfiguration Configuration = new ConfigurationBuilder()
                .Build();
 //declare autofac
 builder.Host.ConfigureContainer<ContainerBuilder>(builder => builder.RegisterModule(new AutofacConfig(Configuration)));
+
 builder.Services.AddAutofac();
 
 

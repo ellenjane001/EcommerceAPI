@@ -4,7 +4,7 @@ using MediatR;
 
 namespace EcommerceAPI.CQRS.Handlers.UserHandlers
 {
-    public class AddUserHandler : IRequestHandler<AddUserCommand>
+    public class AddUserHandler : IRequestHandler<AddUserCommand, Guid>
     {
         private readonly IUserRepository _userRepository;
         public AddUserHandler(IUserRepository userRepository)
@@ -12,10 +12,10 @@ namespace EcommerceAPI.CQRS.Handlers.UserHandlers
             _userRepository = userRepository;
         }
 
-        public async Task Handle(AddUserCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
-            await _userRepository.Post(request.User);
-            return;
+            var UserId = await _userRepository.Post(request.User);
+            return UserId;
         }
     }
 }

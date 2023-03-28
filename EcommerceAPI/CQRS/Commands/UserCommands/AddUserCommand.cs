@@ -3,7 +3,7 @@ using MediatR;
 
 namespace EcommerceAPI.CQRS.Commands.UserCommands
 {
-    public class AddUserCommand : IRequest
+    public class AddUserCommand : IRequest<Guid>
     {
         public CreateUserDTO User { get; set; }
 

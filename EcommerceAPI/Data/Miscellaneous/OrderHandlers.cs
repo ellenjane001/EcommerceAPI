@@ -1,5 +1,6 @@
 ﻿using EcommerceAPI.Data.Contexts;
 using EcommerceAPI.Domain.Entities;
+using EcommerceAPI.Enums;
 
 namespace EcommerceAPI.Data.Miscellaneous
 {
@@ -15,5 +16,22 @@ namespace EcommerceAPI.Data.Miscellaneous
             return _dbContext.Orders.Where(order => Guids.Any(oId => oId.Equals(order.UserId))).ToList();
         }
 
+        public OrderStatus returnEnumValue(short status)
+        {
+            OrderStatus stats = new OrderStatus();
+            switch (status)
+            {
+                case 0:
+                    stats = OrderStatus.Pending;
+                    break;
+                case 1:
+                    stats = OrderStatus.Processed;
+                    break;
+                case 2:
+                    stats = OrderStatus.Cancelled;
+                    break;
+            }
+            return stats;
+        }
     }
 }

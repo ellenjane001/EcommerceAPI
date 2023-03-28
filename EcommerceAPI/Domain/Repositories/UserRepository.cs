@@ -46,21 +46,19 @@ namespace EcommerceAPI.Domain.Repositories
             var query = "SELECT * FROM users WHERE UserId=@UserId";
             var parameters = new { UserId };
             _connection.Open();
-            var users = await _connection.QueryAsync<User>(query, parameters);
-            var user = users.First();
-            var order = _dbContext.Orders.Where(order => order.UserId == user.UserId).FirstOrDefault();
-            if (user != null && order != null)
-            {
-                user.Orders = new List<Order> { order };
-            }
-            else
+            var user = await _connection.QueryFirstAsync<User>(query, parameters);
+            if (user == null)
             {
                 throw new Exception("User not found");
             }
-
+            var order = _dbContext.Orders.Where(order => order.UserId == user.UserId).FirstOrDefault();
+            if (order != null)
+            {
+                user.Orders = new List<Order> { order };
+            }
             return user;
         }
-        public async Task Post(CreateUserDTO user)
+        public async Task<Guid> Post(CreateUserDTO user)
         {
             User newUser = new()
             {
@@ -72,6 +70,7 @@ namespace EcommerceAPI.Domain.Repositories
             }
             _dbContext.Users.Add(newUser);
             await _dbContext.SaveChangesAsync();
+            return _dbContext.Users.FirstOrDefault(u => u.UserName == newUser.UserName)!.UserId;
         }
     }
 }

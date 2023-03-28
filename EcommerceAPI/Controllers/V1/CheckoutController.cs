@@ -8,6 +8,10 @@ namespace EcommerceAPI.Controllers.V1
     [Route("api/v{version:apiVersion}/checkout")]
     [ApiController]
     [ApiVersion("1.0")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public class CheckoutController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -17,8 +21,6 @@ namespace EcommerceAPI.Controllers.V1
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Checkout([FromBody] CheckoutDTO order)
         {
             try

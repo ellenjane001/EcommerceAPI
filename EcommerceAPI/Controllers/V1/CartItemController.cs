@@ -9,6 +9,10 @@ namespace EcommerceAPI.Controllers.V1
     [Route("api/v{version:apiVersion}/cart-items")]
     [ApiController]
     [ApiVersion("1.0")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public class CartItemController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -18,8 +22,6 @@ namespace EcommerceAPI.Controllers.V1
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get()
         {
             try
@@ -33,8 +35,6 @@ namespace EcommerceAPI.Controllers.V1
             }
         }
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] AddCartItemDTO addCartItem)
         {
             try
@@ -49,8 +49,6 @@ namespace EcommerceAPI.Controllers.V1
         }
 
         [HttpPut("{CartItemId:Guid}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Put(Guid CartItemId, [FromBody] UpdateCartItemDTO updateCartItem)
         {
             try
@@ -64,8 +62,6 @@ namespace EcommerceAPI.Controllers.V1
             }
         }
         [HttpDelete("{CartItemId:Guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Delete(Guid CartItemId)
         {
             try

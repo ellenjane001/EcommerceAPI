@@ -7,7 +7,10 @@ namespace EcommerceAPI.Validators
     {
         public CreateUserValidator()
         {
-            RuleFor(user => user.User.UserName).NotEmpty().NotNull().Equals("string");
+            RuleFor(user => user.User.UserName)
+                .NotEmpty()
+                .NotNull()
+                .Equals("string");
         }
     }
 }
