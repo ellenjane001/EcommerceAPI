@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using EcommerceAPI.Data.Contexts;
-using EcommerceAPI.Data.Handlers;
 using EcommerceAPI.Data.Interfaces;
+using EcommerceAPI.Data.Miscellaneous;
 using EcommerceAPI.Domain.Entities;
 using EcommerceAPI.DTO.User;
 using System.Data;

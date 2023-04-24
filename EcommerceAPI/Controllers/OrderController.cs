@@ -1,5 +1,8 @@
-﻿using EcommerceAPI.Data.Interfaces;
+﻿using EcommerceAPI.Data.Commands;
+using EcommerceAPI.Data.Interfaces;
+using EcommerceAPI.Data.Queries;
 using EcommerceAPI.DTO.Order;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceAPI.Controllers
@@ -9,9 +12,11 @@ namespace EcommerceAPI.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderRepository _orderRepository;
-        public OrderController(IOrderRepository orderRepository)
+        private readonly IMediator _mediator;
+        public OrderController(IOrderRepository orderRepository, IMediator mediator)
         {
             _orderRepository = orderRepository;
+            _mediator = mediator;
         }
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -22,7 +27,8 @@ namespace EcommerceAPI.Controllers
         {
             try
             {
-                var result = await _orderRepository.GetOrders();
+                //var result = await _orderRepository.GetOrders();       
+                var result = await _mediator.Send(new GetOrdersQuery());
                 if (result == null)
                 {
                     return NotFound();
@@ -42,7 +48,8 @@ namespace EcommerceAPI.Controllers
         {
             try
             {
-                var result = await _orderRepository.GetOrder(OrderId);
+                //var result = await _orderRepository.GetOrder(OrderId);
+                var result = await _mediator.Send(new GetOrderByIDQuery(OrderId));
                 return Ok(result);
             }
             catch (Exception ex)
@@ -53,15 +60,17 @@ namespace EcommerceAPI.Controllers
         [HttpPut("{OrderId:Guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Put(Guid OrderId, UpdateOrderDTO order)
+        public async Task<IActionResult> Put(Guid OrderId, UpdateOrderDTO order)
         {
             try
             {
-                var result = _orderRepository.Put(OrderId, order);
-                if (result)
-                    return Ok(result);
-                else
-                    return NotFound();
+                await _mediator.Send(new PutOrderCommand(OrderId, order));
+                return NoContent();
+                //var result = _orderRepository.Put(OrderId, order);
+                //if (result)
+                //return Ok(result);
+                //else
+                //return NotFound();
             }
             catch (Exception ex)
             {
@@ -71,11 +80,12 @@ namespace EcommerceAPI.Controllers
         [HttpDelete("{OrderId:Guid}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Delete(Guid OrderId)
+        public async Task<IActionResult> Delete(Guid OrderId)
         {
             try
             {
-                _orderRepository.Delete(OrderId);
+                //_orderRepository.Delete(OrderId);
+                await _mediator.Send(new DeleteOrderCommand(OrderId));
                 return NoContent();
             }
             catch (Exception ex)

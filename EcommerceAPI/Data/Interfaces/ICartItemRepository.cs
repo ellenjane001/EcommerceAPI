@@ -7,7 +7,7 @@ namespace EcommerceAPI.Data.Interfaces
     {
         Task<IEnumerable<CartItem>> GetCartItems();
         Task<Guid> Post(AddCartItemDTO cartItem);
-        bool Put(Guid CartItemId, UpdateCartItemDTO cartItem);
+        Task Put(Guid CartItemId, UpdateCartItemDTO cartItem);
         void Delete(Guid CartItemId);
     }
 }

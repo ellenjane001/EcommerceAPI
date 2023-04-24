@@ -1,7 +1,7 @@
 ﻿using EcommerceAPI.Data.Contexts;
 using EcommerceAPI.Domain.Entities;
 
-namespace EcommerceAPI.Data.Handlers
+namespace EcommerceAPI.Data.Miscellaneous
 {
     public class OrderHandlers
     {
